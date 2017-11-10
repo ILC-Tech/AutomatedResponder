@@ -17,6 +17,7 @@ bot.on('message', (payload, reply) => {
     let greeting = parse.getFirstEntity(payload.message.nlp, 'greetings');
     // console.log(payload.message.nlp.entities)
     console.log('NLP shows greetings: ' + Boolean(greeting))
+    console.log('Timestamp: ' + payload.timestamp)
     bot.getProfile(payload.sender.id, (err, profile) => {
         if (err) throw err
         let text = ''
