@@ -1,0 +1,6 @@
+-----------------------------------------
+Steps Taken to Setup Messenger Bot
+-----------------------------------------
+
+1. Create Facebook Page
+2. 
