@@ -4,13 +4,24 @@
 
 'use strict'
 
+// Returns the first matching entity found in the Messenger NLP object
+let getFirstEntity = function(m, name) {
+    return m.nlp && m.nlp.entities && m.nlp.entities && m.nlp.entities[name] && m.nlp.entities[name][0];
+}
+
 module.exports = {
-    // Returns the first matching entity found in the Messenger NLP object
-    getFirstEntity: function(nlp, name) {
-        return nlp && nlp.entities && nlp.entities && nlp.entities[name] && nlp.entities[name][0];
+    process: function(payload, profile) {
+        let greeting = getFirstEntity(payload.message, 'greetings')
+        console.log('NLP shows greetings: ' + Boolean(greeting))
+        let text = ''
+        if (greeting && greeting.confidence > 0.8) {
+            text += `Hello to you too, ${profile.first_name}!`
+        }
+        else {
+            text += `Hi there, ${profile.first_name}! How can I help you today?`
+        }
+        return text
     },
-
-
     // some simple placeholder functions for now
     extractNames: function(str) {
         // converts str to Title Case

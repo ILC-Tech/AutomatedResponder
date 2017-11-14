@@ -14,19 +14,12 @@ bot.on('error', (err) => {
 
 bot.on('message', (payload, reply) => {
     // let text = 'You said: ' + payload.message.text
-    let greeting = parse.getFirstEntity(payload.message.nlp, 'greetings');
-    // console.log(payload.message.nlp.entities)
-    console.log('NLP shows greetings: ' + Boolean(greeting))
     console.log('Timestamp: ' + payload.timestamp)
+
     bot.getProfile(payload.sender.id, (err, profile) => {
         if (err) throw err
-        let text = ''
-        if (greeting && greeting.confidence > 0.8) {
-            text += `Hello to you too, ${profile.first_name}!`
-        }
-        else {
-            text += `Hi there, ${profile.first_name}! How can I help you today?`
-        }
+
+        let text = parse.process(payload, profile);
         reply({ text }, (err) => {
             if (err) throw err
             console.log(`Echoed back to ${profile.first_name} ${profile.last_name} (${payload.sender.id}): ${text}`)
