@@ -4,13 +4,29 @@
 
 'use strict'
 
+const chrono = require('chrono-node') // for date-time parsing
+
 // Returns the first matching entity found in the Messenger NLP object
-let getFirstEntity = function(m, name) {
-    return m.nlp && m.nlp.entities && m.nlp.entities && m.nlp.entities[name] && m.nlp.entities[name][0];
+let getFirstEntity = function(msg, name) {
+    return msg.nlp && msg.nlp.entities && msg.nlp.entities && msg.nlp.entities[name] && msg.nlp.entities[name][0];
+}
+
+// Returns an formatted query object which can be processed
+let parseQuery = function(query) {
+    let entities = {} // should have things like names, date extracted, type of query, etc.
+    return entities
 }
 
 module.exports = {
     process: function(payload, profile) {
+        entities = parseQuery(payload.message)
+        // do something with entities
+        // call calendar API however needed
+        // generate response text
+        let response = ''
+        return response
+    },
+    greeting: function(payload, profile) {
         let greeting = getFirstEntity(payload.message, 'greetings')
         console.log('NLP shows greetings: ' + Boolean(greeting))
         let text = ''
@@ -21,7 +37,7 @@ module.exports = {
             text += `Hi there, ${profile.first_name}! How can I help you today?`
         }
         return text
-    },
+    }
     // some simple placeholder functions for now
     extractNames: function(str) {
         // converts str to Title Case
