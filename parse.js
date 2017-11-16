@@ -4,6 +4,7 @@
 
 'use strict'
 
+// install chrono from https://github.com/wanasit/chrono
 const chrono = require('chrono-node') // for date-time parsing
 
 // Returns the first matching entity found in the Messenger NLP object
