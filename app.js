@@ -15,7 +15,6 @@ bot.on('error', (err) => {
 bot.on('message', (payload, reply) => {
     // let text = 'You said: ' + payload.message.text
     console.log('Timestamp: ' + payload.timestamp)
-
     bot.getProfile(payload.sender.id, (err, profile) => {
         if (err) throw err
 
