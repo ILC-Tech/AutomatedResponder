@@ -2,5 +2,72 @@
 Steps Taken to Setup Messenger Bot
 -----------------------------------------
 
+All steps are taken from a tutorial by Summer Wu:
+https://sumwu.me/blog/page/9/how-to-create-a-facebook-messenger-bot/
+
+Dependencies:
+- node.js >= 4.0.0
+- ngrok 
+
 1. Create Facebook Page
-2. 
+2. Create Facebook App
+  - Go to app dashboard at https://developers.facebook.com/apps
+  - Click "Add a New App"
+  - From dashboard of new app, select "Messenger"
+  - In "Token Generation Section", select the page you have created
+  - Keep track of the generated "Page Access Token" for later use
+3. Install "messenger-bot", a node-client for sending/receiving messages
+  - node.js must be installed beforehand 
+  - In the directory you want to host your project in, run:
+      npm install messenger-bot
+  - Create a new file called app.js, copy and paste the code below:
+      - Replace PAGE_TOKEN
+      - Feel free to leave VERIFY_TOKEN as is, if you desire
+      
+      'use strict'
+      const http = require('http')
+      const Bot = require('messenger-bot')
+
+      let bot = new Bot({
+        token: 'PAGE_TOKEN',
+        verify: 'VERIFY_TOKEN'
+      })
+
+      bot.on('error', (err) => {
+        console.log(err.message)
+      })
+
+      bot.on('message', (payload, reply) => {
+        let text = payload.message.text
+
+        bot.getProfile(payload.sender.id, (err, profile) => {
+          if (err) throw err
+
+          reply({ text }, (err) => {
+            if (err) throw err
+
+            console.log(`Echoed back to ${profile.first_name} ${profile.last_name}: ${text}`)
+          })
+        })
+      })
+
+      http.createServer(bot.middleware()).listen(3000)
+      
+  3. Use ngrok to set up a secure tunnel to your localhost server
+    - Install ngrok installed, if you haven't already
+    - Open new terminal and run ./ngrok http 3000 in the directory app.js in in
+    - Screen should display information about the tunnel
+    - Keep track of the forwarding url (e.g. https://a1db04f5.ngrok.io)
+    - If you want your bot to be available when you computer's not running, deploy to
+      third-party hosting service (e.g. AWS, Azure)
+  4. Set up Facebook Messenger webhooks
+    - Return to app page; under "Webhooks" section, clock "Setup Webhooks" 
+    - Paste ngrok url into callback url, use the verify token as specified in your app.js file
+    - Select all subscription fields
+  5. Subscribe your app to the page: 
+    - Open terminal and uner the directory run (replacing <token> with Page Access token):
+        curl -ik -X POST "https://graph.facebook.com/v2.6/me/subscribed_apps?access_token=<token>"
+  6. Message your bot1 
+    
+
+  
