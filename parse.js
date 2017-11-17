@@ -12,9 +12,19 @@ let getFirstEntity = function(msg, name) {
     return msg.nlp && msg.nlp.entities && msg.nlp.entities && msg.nlp.entities[name] && msg.nlp.entities[name][0];
 }
 
+let extractNames = function(str) {
+    // converts str to Title Case
+    let titleCase = str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+    return titleCase.match(/[A-Za-z ]+/g)
+}
+
 // Returns an formatted query object which can be processed
+// Currenly only accepts a strict naive format
 let parseQuery = function(query) {
     let entities = {} // should have things like names, date extracted, type of query, etc.
+    let names = extractNames(query)
+    console.log(names)
+
     return entities
 }
 
@@ -38,12 +48,8 @@ module.exports = {
             text += `Hi there, ${profile.first_name}! How can I help you today?`
         }
         return text
-    }
-    // some simple placeholder functions for now
-    extractNames: function(str) {
-        // converts str to Title Case
-        return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
     },
+    // some simple placeholder functions for now
     selectName: function(names, listOfFriends) {
         let i = listOfFriends.indexOf(names);
         if (i >= 0) {
