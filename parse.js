@@ -18,23 +18,50 @@ let extractNames = function(str) {
     return titleCase.match(/[A-Za-z ]+/g)
 }
 
+let extractTimes = function(str) {
+    let date_time = chrono.parse(str)
+    let num_results = date_time.length
+    let results = new Array(num_results)
+    for (let i = 0; i < num_results; i++) {
+        results[i] = {}
+        if (date_time[i].start) {
+            console.log(date_time[i].start)
+            results[i].start = date_time[i].start
+        }
+        if (date_time[i].end) {
+            console.log(date_time[i].end)
+            results[i].end = date_time[i].end
+        }
+    }
+    return results
+}
+
 // Returns an formatted query object which can be processed
 // Currenly only accepts a strict naive format
 let parseQuery = function(query) {
     let entities = {} // should have things like names, date extracted, type of query, etc.
     let names = extractNames(query)
     console.log(names)
-
+    let times = extractTimes(query)
+    console.log(times)
+    entities.names = names
+    entities.times = times
     return entities
 }
 
 module.exports = {
     process: function(payload, profile) {
-        entities = parseQuery(payload.message)
         // do something with entities
         // call calendar API however needed
         // generate response text
+        let entities = parseQuery(payload.message.text)
         let response = ''
+        response += 'Potential names found: ' + entities.names + '\n'
+        response += 'Potential start times found: \n'
+        for (let i = 0; i < entities.times.length; i++) {
+            // console.log(entities.times[i].start)
+            response += entities.times[i].start.date() + '\n'
+        }
         return response
     },
     greeting: function(payload, profile) {
