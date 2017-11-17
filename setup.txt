@@ -67,7 +67,7 @@ Dependencies:
   5. Subscribe your app to the page: 
     - Open terminal and uner the directory run (replacing <token> with Page Access token):
         curl -ik -X POST "https://graph.facebook.com/v2.6/me/subscribed_apps?access_token=<token>"
-  6. Message your bot1 
+  6. Message your bot!
     
 
   
