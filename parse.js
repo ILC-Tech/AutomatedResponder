@@ -12,10 +12,13 @@ let getFirstEntity = function(msg, name) {
     return msg.nlp && msg.nlp.entities && msg.nlp.entities[name] && msg.nlp.entities[name][0];
 }
 
+// converts str to Title Case
+let toTitleCase = function(str) {
+    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+}
+
 let extractNames = function(str) {
-    // converts str to Title Case
-    let titleCase = str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-    return titleCase.match(/[A-Za-z ]+/g)
+    return toTitleCase(str).match(/[A-Za-z ]+/g)
 }
 
 let extractTimes = function(str) {
@@ -67,7 +70,7 @@ let processQueryWit = function(payload, profile, chrono=false) {
     let name = getFirstEntity(payload.message, 'contact')
     let time = getFirstEntity(payload.message, 'datetime')
     if (name) {   // found from Wit.ai NLP
-        response += 'Contact found: ' + name.value + '\n';
+        response += 'Contact found: ' + toTitleCase(name.value) + '\n';
     }
     if (chrono) {   // use chrono library for time parsing
         let times = extractTimes(payload.message.text)
@@ -147,5 +150,6 @@ module.exports = {
         else {
             return null
         }
-    }
+    },
+    toTitleCase: toTitleCase
 };
