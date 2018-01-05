@@ -47,13 +47,13 @@ let parseQuery = function(query) {
     entities.names = names
     entities.times = times
     let queryLower = query.toLowerCase()
-    if queryLower.startsWith('update') {
+    if (queryLower.startsWith('update')) {
         entities.queryType = 'update'
     }
-    else if queryLower.startsWith('calendar') || queryLower.startsWith('where is') || queryLower.startsWith("where's") {
+    else if (queryLower.startsWith('calendar') || queryLower.startsWith('where is') || queryLower.startsWith("where's")) {
         entities.queryType = 'calendar'
     }
-    else if queryLower.startsWith('help') {
+    else if (queryLower.startsWith('help')) {
         entities.queryType = 'help'
     }
     else {
@@ -73,10 +73,10 @@ let getFriendCalendar = function(user_profile, entities) {
 let updateCalendar = function(user_profile, entities) {
     // update the user's calendar
     let response = 'update query.\n'
-    if entities.times:
-        response += 'Time: ' + entities.times[0] + '\n'
-    if entities.names:
-        response += 'Names found: ' + entities.names
+    if (entities.times)
+        response += 'Time: ' + entities.times[0] + '\n';
+    if (entities.names)
+        response += 'Names found: ' + entities.names;
     return response
 }
 
