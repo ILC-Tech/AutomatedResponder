@@ -46,11 +46,60 @@ let parseQuery = function(query) {
     console.log(times)
     entities.names = names
     entities.times = times
+    let queryLower = query.toLowerCase()
+    if queryLower.startsWith('update') {
+        entities.queryType = 'update'
+    }
+    else if queryLower.startsWith('calendar') || queryLower.startsWith('where is') || queryLower.startsWith("where's") {
+        entities.queryType = 'calendar'
+    }
+    else if queryLower.startsWith('help') {
+        entities.queryType = 'help'
+    }
+    else {
+        entities.queryType = 'unknown'
+    }
     return entities
+}
+
+let help = function() {
+    return "With this bot, you can find out what your friends' calendars look like at any given time, as well as share your own calendar with them! Here's how to use this bot:\n\nSay 'calendar' followed by your friend's name to get your friend's current schedule.\n\nSay 'update' followed by a time and an event name to add an event to your own calendar.\n\nHappy scheduling!"
+}
+
+let getFriendCalendar = function(user_profile, entities) {
+    return friend_id
+}
+
+let updateCalendar = function(user_profile, entities) {
+    // update the user's calendar
+    let response = 'update query.\n'
+    if entities.times:
+        response += 'Time: ' + entities.times[0] + '\n'
+    if entities.names:
+        response += 'Names found: ' + entities.names
+    return response
 }
 
 module.exports = {
     process: function(payload, profile) {
+        let entities = parseQuery(payload.message.text)
+        let response = ''
+        switch(entities.queryType) {
+            case 'update':
+                response += updateCalendar(profile, entities)
+                break
+            case 'calendar':
+                response += getFriendCalendar(profile, entities)
+                break
+            case 'unknown':
+                response += 'Sorry! I did not understand your query.\n'
+            case 'help':
+                response += help()
+                break
+        }
+        return response
+    },
+    debug_process: function(payload, profile) {
         // do something with entities
         // call calendar API however needed
         // generate response text
