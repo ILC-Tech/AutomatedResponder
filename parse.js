@@ -97,7 +97,7 @@ module.exports = {
                 response += help()
                 break
         }
-        return response
+        return entities + '\n' + response
     },
     debug_process: function(payload, profile) {
         // do something with entities
