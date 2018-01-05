@@ -4,7 +4,7 @@ const Bot = require('messenger-bot')
 const parse = require('./parse')
 
 let bot = new Bot({
-    token: 'EAAPZCNFxvIMEBAE9Tab6FZCpgZBJw9tPOgOemMqnqOLSabuzPfapONeY7IvYVsebQXqQ6V0kBU3XwnGM8MAe6txbR0YGM2fKHdyZAIYAAdKRO8PalWD2JrxHDWxmffUZCcjauay2n8GZA6hDU5GMtC3BIzLquqh4cqEgERQO1nv1YZAspqfDMK9',
+    token: 'EAAPZCNFxvIMEBAFlEkizpLB36nYMQFYYWWeZCEFqW3cZCDccm0aXhVm74Vugq5gxld6g4U9Cozl0WCl2twlxbg3ZATuryf9RY2WUV8Nonp0gGJH9dxSzkMlH11MZAbWZBOzQxlodrXZAB6yIPb6nCKdD2uvo6ZBZAt4zHUUiIb35B2x6ARwLrHIlF',
     verify: 'ILC_VERIFY'
 })
 
