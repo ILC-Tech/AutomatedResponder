@@ -9,7 +9,7 @@ const chrono = require('chrono-node') // for date-time parsing
 
 // Returns the first matching entity found in the Messenger NLP object
 let getFirstEntity = function(msg, name) {
-    return msg.nlp && msg.nlp.entities && msg.nlp.entities && msg.nlp.entities[name] && msg.nlp.entities[name][0];
+    return msg.nlp && msg.nlp.entities && msg.nlp.entities[name] && msg.nlp.entities[name][0];
 }
 
 let extractNames = function(str) {
@@ -62,12 +62,39 @@ let parseQuery = function(query) {
     return entities
 }
 
+let processQueryWit = function(payload, profile, chrono=false) {
+    let response = ''
+    let name = getFirstEntity(payload.message, 'contact')
+    let time = getFirstEntity(payload.message, 'datetime')
+    if (name) {   // found from Wit.ai NLP
+        response += 'Contact found: ' + name.value + '\n';
+    }
+    if (chrono) {   // use chrono library for time parsing
+        let times = extractTimes(payload.message.text)
+        if (times && times[0])
+            response += 'Time found: ' + JSON.stringify(times) + '\n';
+    }
+    else {          // use Wit.ai NLP for time parsing
+        if (time && time.values) {
+            switch (time.values[0].type) {
+                case 'interval':
+                    response += 'Time interval found from ' + time.values[0]['from']['value'] + ' to ' + time.values[0]['to']['value']
+                    break
+                case 'value':
+                    response += 'Time found: ' + time.values[0]['value']
+                    break
+            }
+        }
+    }
+    return response
+}
+
 let help = function() {
     return "With this bot, you can find out what your friends' calendars look like at any given time, as well as share your own calendar with them! Here's how to use this bot:\n\nSay 'calendar' followed by your friend's name to get your friend's current schedule.\n\nSay 'update' followed by a time and an event name to add an event to your own calendar.\n\nHappy scheduling!"
 }
 
 let getFriendCalendar = function(user_profile, entities) {
-    return friend_id
+    return JSON.stringify(user_profile)
 }
 
 let updateCalendar = function(user_profile, entities) {
@@ -82,22 +109,8 @@ let updateCalendar = function(user_profile, entities) {
 
 module.exports = {
     process: function(payload, profile) {
-        let entities = parseQuery(payload.message.text)
-        let response = ''
-        switch(entities.queryType) {
-            case 'update':
-                response += updateCalendar(profile, entities)
-                break
-            case 'calendar':
-                response += getFriendCalendar(profile, entities)
-                break
-            case 'unknown':
-                response += 'Sorry! I did not understand your query.\n'
-            case 'help':
-                response += help()
-                break
-        }
-        return entities + '\n' + response
+        // return JSON.stringify(payload.message.nlp.entities)
+        return processQueryWit(payload, profile)
     },
     debug_process: function(payload, profile) {
         // do something with entities
