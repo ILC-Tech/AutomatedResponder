@@ -65,7 +65,8 @@ let parseQuery = function(query) {
     return entities
 }
 
-let processQueryWit = function(payload, profile, chrono=false) {
+//let processQueryWit = function(payload, profile, chrono=false) {
+let processQueryWit = function(payload, profile) {
     let response = ''
     let name = getFirstEntity(payload.message, 'contact')
     let time = getFirstEntity(payload.message, 'datetime')
@@ -111,6 +112,12 @@ let updateCalendar = function(user_profile, entities) {
 }
 
 module.exports = {
+    getName: function(str) {
+      return extractNames(str)
+    },
+    getTime: function(str) {
+      return extractTimes(str)
+    },
     process: function(payload, profile) {
         // return JSON.stringify(payload.message.nlp.entities)
         return processQueryWit(payload, profile)
